@@ -4,7 +4,6 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
         <!-- ============================= MATERIALIZE ============================== -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
         <!-- ============================= MATERIAL ICONS ============================== -->
@@ -38,7 +37,6 @@
         <title>Proyecto Fase 2</title>
         <!-- STYLE -->
         <link rel="stylesheet" href="styles/style.css" type="text/css">
-        
 
         <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 
@@ -52,6 +50,24 @@
 
     </head>
     <body>
+
+        <div id="modal1" class="modal">
+            <div class="modal-content">
+                <h4>Ingrese un valor:</h4>
+                <form id="modalForm">
+                    <div class="input-field">
+                        <input id="modal_input_value" type="text" class="validate">
+                        <label for="modal_input_value">Input</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-close btn waves-effect waves-light" type="submit" form="modalForm" name="action">Cargar
+                    <i class="material-icons right">send</i>
+                </button>
+            </div>
+        </div>
+    
         <a href="" id="download" style="display: none" download=""></a>
         <div class="row">
             <div class="col s12 m12 l6">
@@ -59,32 +75,29 @@
                     <div class="nav-wrapper">
                         <ul id="nav-mobile" class="nav__options">
                             <li>
-                                <label for="fileInput" class="circle-label tooltipped" data-position="bottom" data-tooltip="Abrir archivo">
-                                    <div class="circle">
-                                        <i class="tiny material-icons">file_open</i>
-                                        <input style="display: none;" type="file" id="fileInput" accept=".s" onchange="CargarArchivo()">
-                                    </div>
-                                </label>
+                                <button class="btn-floating waves-effect waves-circle waves-light red  tooltipped" data-position="bottom" data-tooltip="Open File" id="btn__open">
+                                    <i class="tiny material-icons"> cloud_upload </i>
+                                </button>
                             </li>
                             <li>
-                                <button style="margin-top: 8px;"  class="btn-floating waves-effect waves-circle waves-light   tooltipped" data-position="bottom" data-tooltip="Guardar archivo" id="btn__save">
+                                <button class="btn-floating waves-effect waves-circle waves-light red  tooltipped" data-position="bottom" data-tooltip="Save File" id="btn__save">
                                     <i class="material-icons"> cloud_download </i>
                                 </button>
                             </li>
                         </ul>
                         <div>
-                            <h3 class="title-editor">Fase 2</h3>
+                            <h3 class="title-editor">Fase 2 - OLC2</h3>
                         </div>
 
                         <ul id="nav-mobile" class="nav__options">
                             <li>
-                                <button class="btn-floating waves-effect waves-circle waves-light   tooltipped" data-position="bottom" data-tooltip="Generar CST" id="btn__analysis">
+                                <button class="btn-floating waves-effect waves-circle waves-light red  tooltipped" data-position="bottom" data-tooltip="Analysis" id="btn__analysis">
                                     <i class="material-icons"> play_arrow</i>
                                 </button>
                             </li>
 
                             <li>
-                                <button class="btn-floating waves-effect waves-circle waves-light   tooltipped" data-position="bottom" data-tooltip="Limpiar" id="btn__clean">
+                                <button class="btn-floating waves-effect waves-circle waves-light red  tooltipped" data-position="bottom" data-tooltip="Clear Editor" id="btn__clean">
                                     <i class="material-icons"> cleaning_services </i>
                                 </button>
                             </li>
@@ -97,9 +110,10 @@
             </div>
             <div class="col s12 m12 l6">
                 <ul class="tabs tabs-fixed-width  z-depth-5">
-                    <li class="tab"><a href="#console-tab"> Consola</a></li>
+                    <li class="tab"><a href="#console-tab"> Console </a></li>
                     <li class="tab"><a href="#cst"> CST </a></li>
-                    <li class="tab"><a href="#quad__table">Cuadruplos</a></li>
+                    <li class="tab"><a href="#quad__table"> Quadruples </a></li>
+                    <li class="tab"><a href="#data__table"> Data </a></li>
                 </ul>
 
                 <div id="console-tab" class="col s12 tab__panel">
@@ -135,6 +149,24 @@
                         </tfoot>
                     </table>
                 </div>
+
+                <div id="data__table" class="col s12 tab__panel">
+                    <table id="dataTable" style="width: 100%">
+                          <thead>
+                            <tr>
+                                <th>Register</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Register</th>
+                                <th>Data</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </div>
         
@@ -142,20 +174,30 @@
         <script src="parser/parser.js"></script>
         <!-- ============================= SCRIPT ============================== -->
         <script src="main.js"></script>
-        <!-- ============================= CST ============================== -->
+        <!-- ============================= INTERFACES ============================== -->
         <script src="./interfaces/expression.js"></script>
         <script src="./interfaces/instruction.js"></script>
+        <!-- ============================= ENVIRONMENT ============================== -->
         <script src="./environment/ast.js"></script>
         <script src="./environment/cst.js"></script>
         <script src="./environment/environment.js"></script>
+        <script src="./environment/registers.js"></script>
+        <script src="./environment/symbol.js"></script>
+        <script src="./environment/type.js"></script>
+        <!-- ============================= GENERATOR ============================== -->
         <script src="./generator/generator.js"></script>
         <script src="./generator/quadruples.js"></script>
+        <!-- ============================= EXECUTE ============================== -->
         <script src="./execute/executer.js"></script>
         <script src="./execute/root.js"></script>
         <script src="./execute/textSection.js"></script>
         <!-- ============================= EXPRESSIONS ============================== -->
         <script src="./expressions/operation.js"></script>
-        <!-- ============================= EXPRESSIONS ============================== -->
+        <script src="./expressions/primitive.js"></script>
+        <!-- ============================= INSTRUCTIONS ============================== -->
         <script src="./instructions/systemCall.js"></script>
+        <script src="./instructions/declaration.js"></script>
+        <script src="./instructions/move.js"></script>
+        <script src="./instructions/ldr.js"></script>
     </body>
 </html>
