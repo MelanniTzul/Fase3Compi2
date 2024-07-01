@@ -305,6 +305,7 @@ and_inst
         const loc = location()?.start;
         const idRoot = cst.newNode();
         newPath(idRoot, 'Logic', ['and', rd, 'COMA', src1, 'COMA', src2]);    
+        return new Operation(loc?.line,loc?.column,rd.name,'Logic','and',src1.name,src2.name,null);
     }
 
     / _* "AND"i _* rd:reg32 _* "," _* src1:reg32 _* "," _* src2:operand32 _* comment? "\n"?
@@ -312,6 +313,7 @@ and_inst
         const loc = location()?.start;
         const idRoot = cst.newNode();
         newPath(idRoot, 'Logic', ['and', rd, 'COMA', src1, 'COMA', src2]);    
+        return new Operation(loc?.line,loc?.column,rd.name,'Logic','and',src1.name,src2.name,null);
     }
 
 // Instrucciones OR 64 bits y 32 bits (ORR)
@@ -320,24 +322,33 @@ orr_inst
     {
         const loc = location()?.start;
         const idRoot = cst.newNode();
-        newPath(idRoot, 'Logic', ['orr', rd, 'COMA', src1, 'COMA', src2]);    
+        newPath(idRoot, 'Logic', ['orr', rd, 'COMA', src1, 'COMA', src2]); 
+        return new Operation(loc?.line,loc?.column,rd.name,'Logic','orr',src1.name,src2.name,null);   
     }
 
     / _* "ORR"i _* rd:reg32 _* "," _* src1:reg32 _* "," _* src2:operand32 _* comment? "\n"?
 
+    {    const loc = location()?.start;
+        const idRoot = cst.newNode();
+        newPath(idRoot, 'Logic', ['orr', rd, 'COMA', src1, 'COMA', src2]); 
+        return new Operation(loc?.line,loc?.column,rd.name,'Logic','orr',src1.name,src2.name,null);   
+    }
+
 // Instrucciones XOR 64 bits y 32 bits (EOR)
 eor_inst
     = _* "EOR"i _* rd:reg64 _* "," _* src1:reg64 _* "," _* src2:operand64 _* comment? "\n"?
-	{
+	  {
         const loc = location()?.start;
         const idRoot = cst.newNode();
         newPath(idRoot, 'Logic', ['eor', rd, 'COMA', src1, 'COMA', src2]);    
+        return new Operation(loc?.line,loc?.column,rd.name,'Logic','eor',src1.name,src2.name,null);  
     }
     / _* "EOR"i _* rd:reg32 _* "," _* src1:reg32 _* "," _* src2:operand32 _* comment? "\n"?
     {
         const loc = location()?.start;
         const idRoot = cst.newNode();
-        newPath(idRoot, 'Logic', ['eor', rd, 'COMA', src1, 'COMA', src2]);    
+        newPath(idRoot, 'Logic', ['eor', rd, 'COMA', src1, 'COMA', src2]); 
+        return new Operation(loc?.line,loc?.column,rd.name,'Logic','eor',src1.name,src2.name,null);     
     }
 
 // Instrucción MOV 64 bits y 32 bits (MOV)
@@ -347,6 +358,7 @@ mov_inst "Instrucción MOV"
         const loc = location()?.start;
         const idRoot = cst.newNode();
         newPath(idRoot, 'Control', ['mov', rd, 'COMA', src]);
+        return new Move(loc?.line, loc?.column, idRoot, rd.name ,src.name);
     }
 
 reg64_or_reg32 "Registro de 64 o 32 Bits"
@@ -364,15 +376,17 @@ ldr_inst "Instrucción LDR"
         const loc = location()?.start;
         const idRoot = cst.newNode();
         newPath(idRoot, 'LoadR', ['ldr', rd, 'COMA', src]);    
+        return new Ldr(loc?.line, loc?.column, idRoot, rd.name, src.name);
     }
     / _* "LDR"i _* rd:reg32 _* "," _* src:ldr_source _* comment? "\n"?
     {
         const loc = location()?.start;
         const idRoot = cst.newNode();
-        newPath(idRoot, 'LoadR', ['ldr', rd, 'COMA', src]);    
+        newPath(idRoot, 'LoadR', ['ldr', rd, 'COMA', src]);   
+        return new Ldr(loc?.line, loc?.column, idRoot, rd.name, src.name); 
     }
 ldr_source 
-    = "=" l:label
+    = "=" l:label {return l;}
 
     / "[" _* r:reg64_or_reg32 _* "," _* r2:reg64_or_reg32 _* "," _* s:shift_op _* i2:immediate _* "]"
     {
