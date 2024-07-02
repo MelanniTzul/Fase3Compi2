@@ -1,31 +1,4 @@
 {
-    class Cst {
-    constructor() {
-        this.Nodes = [];
-        this.Edges = [];
-        this.idCount = 0;
-    }
-
-    newNode(){
-        let count = this.idCount; 
-        this.idCount++;
-        return `${count}`
-    }
-
-    addNode(id, label){
-        this.Nodes.push({
-            id: id, 
-            label: label,
-        });
-    }
-
-    addEdge(from, to){
-        this.Edges.push({
-            from: from, 
-            to: to,
-        });
-    }
-}
   // Creando cst 
   let cst = new Cst();
   // Agregar nodos
@@ -47,7 +20,7 @@
 
 
 Start
-  = gs:GlobalSection _? ds1:DataSection? _? ts:TextSection _? ds2:DataSection? blank_line?{
+  = gs:GlobalSection _? ds1:DataSection? _? ts:TextSection _? ds2:DataSection? {
     let dataSectionConcat = []
     if (ds1 != null) dataSectionConcat = dataSectionConcat.concat(ds1.value);
     if (ds2 != null) dataSectionConcat = dataSectionConcat.concat(ds2.value);
@@ -56,7 +29,7 @@ Start
     newPath(idRoot, 'Start', [gs, ds1, ts, ds2]);
     return new Root(gs, dataSectionConcat, ts, cst);
   }
-  /blank_line
+
 
 GlobalSection
   = ".global" _ id:label _ 
@@ -392,20 +365,24 @@ ldr_source
     {
         const loc = location()?.start;
         const idRoot = cst.newNode();
-        newPath(idRoot, 'array', [r, r2, s, i2]);    
+        newPath(idRoot, 'array', [r, r2, s, i2]);  
+        return {name: 'hola'};  
     }
 
     / "[" _* r:reg64 _* "," _* i:immediate _* "," _* s:shift_op _* i2:immediate _* "]"
     {
         const loc = location()?.start;
         const idRoot = cst.newNode();
-        newPath(idRoot, 'array', [r, i, s, i2]);    
+        newPath(idRoot, 'array', [r, i, s, i2]); 
+        return {name: 'hola'};   
     }
     / "[" _* r:reg64 _* "," _* i:immediate _* "," _* e:extend_op _* "]"
    {
         const loc = location()?.start;
         const idRoot = cst.newNode();
         newPath(idRoot, 'array', [r, i, s, i2]);    
+        return {name: 'hola'};
+
     }
     / "[" _* r:mov_source _* "," _* i:mov_source _* "]"
     {
@@ -413,6 +390,7 @@ ldr_source
         let idRoot = cst.newNode(); 
         newPath(idRoot, 'array', [r,i]);
         //return { id: idRoot, name: int }
+        return {name: 'hola'};
     }    
     / "[" _* r:reg64 _* "," _* i:immediate _* "]"
     {
@@ -420,6 +398,7 @@ ldr_source
         let idRoot = cst.newNode(); 
         newPath(idRoot, 'array', [r,i]);
         return { id: idRoot, name: [r,i] }
+        
     }
  
     / "[" _* r:reg64 _* "]"
@@ -428,6 +407,7 @@ ldr_source
         let idRoot = cst.newNode(); 
         newPath(idRoot, 'array', [r]);
         return { id: idRoot, name: [r]}
+        
     }
 // Instrucción Load Register (LDRB)
 ldrb_inst "Instrucción LDRB"

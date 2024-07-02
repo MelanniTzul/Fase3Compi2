@@ -685,5 +685,5 @@ mcomment "Comentario Multilinea"
     = "/*" ([^*] / [*]+ [^*/])* "*/" {}
 
 // Espacios en blanco
-_ "Ignorado"
+_"Ignorado"
     = [ \t]+ {}
