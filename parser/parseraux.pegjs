@@ -28,7 +28,7 @@ Start
     // Agregando raiz cst
     let idRoot = cst.newNode();
     newPath(idRoot, 'Start', [gs, ds1, bss1, ts, ds2, bss2 ]);
-    return new Root(gs, dataSectionConcat, ts, c st);
+    return new Root(gs, dataSectionConcat, ts, cst);
   }
 
 GlobalSection
