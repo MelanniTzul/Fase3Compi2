@@ -191,7 +191,6 @@ const addDataTable = (data) => {
     }
 }
 
-// Función para limpiar la tabla de datos
 const clearDataTable = () => {
     dataTable.clear().draw();
 }
