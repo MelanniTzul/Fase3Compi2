@@ -24,7 +24,8 @@ $(document).ready(function () {
     
     // Obtener la instancia del modal
     modalInstance = M.Modal.getInstance(document.getElementById('modal1'));
-
+    dataTable.order([0, 'asc']).draw();
+    
 });
 
 function handleSubmit() {
@@ -169,6 +170,8 @@ const analysis = async () => {
         addDataToQuadTable(gen.getQuadruples());
         // Generando data
         addDataTable(ast.registers?.getRegisterHexa());
+        // Ordenando la tabla después de agregar los datos
+        dataTable.order([0, 'asc']).draw();
         // Agregando salida válida en consola
         if (ast.getErrors()?.length === 0) consoleResult.setValue(ast.getConsole());
         else consoleResult.setValue('Se encontraron algunos errores en la ejecución.');
@@ -203,9 +206,13 @@ const addDataToQuadTable = (data) => {
 // Función para agregar dataos
 const addDataTable = (data) => {
     for (let da of data) {
-        dataTable.row.add(da).draw();
+        dataTable.row.add(da).draw(); // Agrega cada dato y llama a draw() para actualizar la tabla
     }
+    // Ordena la tabla después de agregar los datos
+    dataTable.order([0, 'asc']).draw(); // Ordena por la primera columna de forma ascendente
 }
+
+
 
 const clearDataTable = () => {
     dataTable.clear().draw();
@@ -261,6 +268,9 @@ const newDataTable = (id, columns, data) => {
         data,
         columns,
         searching: true,
+         columnDefs: [
+            { type: 'num', targets: 0 }
+        ],
         language: {
             "sProcessing":     "Procesando...",
             "sLengthMenu":     "Mostrar _MENU_ registros",
@@ -284,7 +294,8 @@ const newDataTable = (id, columns, data) => {
                 "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
                 "sSortDescending": ": Activar para ordenar la columna de manera descendente"
             }
-        }
+        },
+        order: [[0, 'asc']]
     });
     $('select').formSelect();
     return result;
