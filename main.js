@@ -133,6 +133,7 @@ const analysis = async () => {
     const start = performance.now();
     const text = Arm64Editor.getValue();
     clearQuadTable();
+    clearDataTable();
     try {
         // Creando ast auxiliar
         let ast = new Ast();
@@ -188,6 +189,11 @@ const addDataTable = (data) => {
     for (let da of data) {
         dataTable.row.add(da).draw();
     }
+}
+
+// Función para limpiar la tabla de datos
+const clearDataTable = () => {
+    dataTable.clear().draw();
 }
 
 const clearQuadTable = () => {
