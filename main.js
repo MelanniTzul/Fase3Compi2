@@ -24,7 +24,8 @@ $(document).ready(function () {
     
     // Obtener la instancia del modal
     modalInstance = M.Modal.getInstance(document.getElementById('modal1'));
-
+    dataTable.order([0, 'asc']).draw();
+    
 });
 
 function handleSubmit() {
@@ -110,7 +111,23 @@ const download = (name, content) => {
 const cleanEditor = (editor,consola) => {
     editor.setValue("");
     consola.setValue("");
+    clearQuadTable();
+    clearDataTable();
+    clearCST();
 }
+
+const clearCST = () => {
+    if (network) {
+        network.destroy();
+        network = undefined;
+    }
+    const container = document.getElementById('mynetwork');
+    if (container) {
+        container.innerHTML = ''; // Limpia el contenido del contenedor
+    }
+};
+
+
 
 function isLexicalError(e) {
     const validIdentifier = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/;
@@ -153,6 +170,8 @@ const analysis = async () => {
         addDataToQuadTable(gen.getQuadruples());
         // Generando data
         addDataTable(ast.registers?.getRegisterHexa());
+        // Ordenando la tabla después de agregar los datos
+        dataTable.order([0, 'asc']).draw();
         // Agregando salida válida en consola
         if (ast.getErrors()?.length === 0) consoleResult.setValue(ast.getConsole());
         else consoleResult.setValue('Se encontraron algunos errores en la ejecución.');
@@ -187,9 +206,13 @@ const addDataToQuadTable = (data) => {
 // Función para agregar dataos
 const addDataTable = (data) => {
     for (let da of data) {
-        dataTable.row.add(da).draw();
+        dataTable.row.add(da).draw(); // Agrega cada dato y llama a draw() para actualizar la tabla
     }
+    // Ordena la tabla después de agregar los datos
+    dataTable.order([0, 'asc']).draw(); // Ordena por la primera columna de forma ascendente
 }
+
+
 
 const clearDataTable = () => {
     dataTable.clear().draw();
@@ -204,7 +227,7 @@ function mostrarToast(mensaje, duracion, type) {
     M.toast({html: mensaje, displayLength: duracion, classes: type});
 }
 
-
+let network;
 const generateCst = (CstObj) => {
     // Creando el arreglo de nodos
     let nodes = new vis.DataSet(CstObj.Nodes);
@@ -234,7 +257,7 @@ const generateCst = (CstObj) => {
     };
 
     // Generando grafico red
-    let network = new vis.Network(container, data, options);
+    network = new vis.Network(container, data, options);
 }
 
 const newDataTable = (id, columns, data) => {
@@ -245,6 +268,9 @@ const newDataTable = (id, columns, data) => {
         data,
         columns,
         searching: true,
+         columnDefs: [
+            { type: 'num', targets: 0 }
+        ],
         language: {
             "sProcessing":     "Procesando...",
             "sLengthMenu":     "Mostrar _MENU_ registros",
@@ -268,7 +294,8 @@ const newDataTable = (id, columns, data) => {
                 "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
                 "sSortDescending": ": Activar para ordenar la columna de manera descendente"
             }
-        }
+        },
+        order: [[0, 'asc']]
     });
     $('select').formSelect();
     return result;
