@@ -1,10 +1,14 @@
 
-let quadTable, symbolTable, Arm64Editor, consoleResult, generalTime;
+let quadTable, dataTable, symbolTable, Arm64Editor, consoleResult, modalInstance;
 
 $(document).ready(function () {
 
     quadTable = newDataTable('#quadTable',
         [{data: "Op"}, {data: "Arg1"}, {data: "Arg2"}, {data: "Arg3"}, {data: "Result"}],
+        []);
+    
+    dataTable = newDataTable('#dataTable',
+        [{data: "Register"}, {data: "Data"}],
         []);
 
     $('.tabs').tabs();
@@ -13,7 +17,37 @@ $(document).ready(function () {
 
     Arm64Editor = editor('julia__editor', 'text/x-rustsrc');
     consoleResult = editor('console__result', '', false, true, false);
+    
+    // Inicializar los modales
+    let elems = document.querySelectorAll('.modal');
+    M.Modal.init(elems);
+    
+    // Obtener la instancia del modal
+    modalInstance = M.Modal.getInstance(document.getElementById('modal1'));
+
 });
+
+function handleSubmit() {
+    return new Promise((resolve, reject) => {
+        document.getElementById('modalForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const inputValue = document.getElementById('modal_input_value').value;
+            document.getElementById('modal_input_value').value = '';
+            M.updateTextFields();
+            modalInstance.close();
+            resolve(inputValue);
+        }, { once: true });
+    });
+}
+
+window.openModal = function() {
+    modalInstance.open();
+    return handleSubmit();
+};
+
+window.closeModal = function() {
+    modalInstance.close();
+};
 
 function editor(id, language, lineNumbers = true, readOnly = false, styleActiveLine = true) {
     return CodeMirror.fromTextArea(document.getElementById(id), {
@@ -25,7 +59,25 @@ function editor(id, language, lineNumbers = true, readOnly = false, styleActiveL
     });
 }
 
+const openFile = async (editor) => {
+    const {value: file} = await Swal.fire({
+        title: 'Select File',
+        input: 'file',
 
+    })
+    if (!file) return
+
+    let reader = new FileReader();
+
+    reader.onload = (e) => {
+        const file = e.target.result;
+        editor.setValue(file);
+    }
+    reader.onerror = (e) => {
+        console.log("Error to read file", e.target.error)
+    }
+    reader.readAsText(file)
+}
 
 const saveFile = async (fileName, extension, editor) => {
     if (!fileName) {
@@ -55,9 +107,8 @@ const download = (name, content) => {
     link.click()
 }
 
-const cleanEditor = (editor,consola) => {
+const cleanEditor = (editor) => {
     editor.setValue("");
-    consola.setValue("");
 }
 
 function isLexicalError(e) {
@@ -83,22 +134,26 @@ const analysis = async () => {
     clearQuadTable();
     try {
         // Creando ast auxiliar
-        //let ast = new Ast();
+        let ast = new Ast();
         // Creando entorno global
-        //let env = new Environment(null, 'Global');
+        let env = new Environment(null, 'Global');
         // Creando generador
         let gen = new Generator();
-        // Obteniendo árbol
+        // Obteniendo raiz del árbol
         let result = PEGGY.parse(text);
+        // Guardando data (variables)
+        await DataSectionExecuter(result, ast, env, gen);
         // Ejecutando instrucciones
-        //RootExecuter(result, ast, env, gen);
+        await RootExecuter(result, ast, env, gen);
         // Generando gráfica
-        console.log(result)
-        generateCst(result);
+        generateCst(result.CstTree);
         // Generando cuádruplos
-        //addDataToQuadTable(gen.getQuadruples());
+        addDataToQuadTable(gen.getQuadruples());
+        // Generando data
+        addDataTable(ast.registers?.getRegisterHexa());
         // Agregando salida válida en consola
-        consoleResult.setValue("VALIDO");
+        if (ast.getErrors()?.length === 0) consoleResult.setValue(ast.getConsole());
+        else consoleResult.setValue('Se encontraron algunos errores en la ejecución.');
     } catch (e) {
         if (e instanceof PEGGY.SyntaxError) {
             if (isLexicalError(e)) {
@@ -108,12 +163,11 @@ const analysis = async () => {
             }
         } else {
             console.error('Error desconocido:', e);
-            consoleResult.setValue("No VALIDO");
         }
     }
     // ****************** Tiempo final
     const end = performance.now();
-    generalTime = (end - start).toFixed(2);
+    let generalTime = (end - start).toFixed(2);
     // Mostrar mensaje en pantalla
     mostrarToast(`
         <span><i class="material-icons left">access_time</i>
@@ -125,6 +179,13 @@ const analysis = async () => {
 const addDataToQuadTable = (data) => {
     for (let quad of data) {
         quadTable.row.add(quad?.getQuadruple()).draw();
+    }
+}
+
+// Función para agregar dataos
+const addDataTable = (data) => {
+    for (let da of data) {
+        dataTable.row.add(da).draw();
     }
 }
 
@@ -182,37 +243,13 @@ const newDataTable = (id, columns, data) => {
     return result;
 }
 
-    btnOpen = document.getElementById('btn__open'),
+const btnOpen = document.getElementById('btn__open'),
     btnSave = document.getElementById('btn__save'),
     btnClean = document.getElementById('btn__clean'),
     btnShowCst = document.getElementById('btn__showCST'),
     btnAnalysis = document.getElementById('btn__analysis');
 
-//btnOpen.addEventListener('click', () => openFile(Arm64Editor));
-btnSave.addEventListener('click', () => saveFile("file", "s", Arm64Editor));
-btnClean.addEventListener('click', () => cleanEditor(Arm64Editor,consoleResult));
-btnAnalysis.addEventListener('click', () => analysis());
-
-function CargarArchivo() {
-    const fileInput = document.getElementById('fileInput');
-    const file = fileInput.files[0];
-
-    if (file) {
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-            const content = e.target.result;
-            
-            // Establecer el contenido en el editor CodeMirror
-            Arm64Editor.setValue(content);
-
-            // Opcional: Actualizar el número de líneas si es necesario
-            Arm64Editor.refresh();
-
-            console.log(content);
-            fileInput.value = '';
-        };
-
-        reader.readAsText(file);
-    }
-}
+btnOpen.addEventListener('click', () => openFile(Arm64Editor));
+btnSave.addEventListener('click', () => saveFile("file", "rs", Arm64Editor));
+btnClean.addEventListener('click', () => cleanEditor(Arm64Editor));
+btnAnalysis.addEventListener('click', async () => await analysis());
