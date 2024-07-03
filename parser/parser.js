@@ -362,25 +362,25 @@ function peg$parse(input, options) {
     const loc = location()?.start;
     let idRoot = cst.newNode();
     newPath(idRoot, 'Logic', ['and', reg1, 'COMA', reg2, 'COMA', reg3]);
-    return new Operation(loc?.line, loc?.column, idRoot, 'Logic', 'and', reg1.name, reg2.name, reg3.name, null);
+    return new And(loc?.line, loc?.column, idRoot, reg1.name, reg2.name, reg3.name);
   };
   var peg$f19 = function(reg1, reg2, reg3) {
     const loc = location()?.start;
     let idRoot = cst.newNode();
     newPath(idRoot, 'Logic', ['orr', reg1, 'COMA', reg2, 'COMA', reg3]);
-    return new Operation(loc?.line, loc?.column, idRoot, 'Logic', 'orr', reg1.name, reg2.name, reg3.name, null);
+    return new Orr(loc?.line, loc?.column, idRoot, reg1.name, reg2.name, reg3.name);
   };
   var peg$f20 = function(reg1, reg2, reg3) {
     const loc = location()?.start;
     let idRoot = cst.newNode();
     newPath(idRoot, 'Logic', ['eor', reg1, 'COMA', reg2, 'COMA', reg3]);
-    return new Operation(loc?.line, loc?.column, idRoot, 'Logic', 'eor', reg1.name, reg2.name, reg3.name, null);
+    return new Eor(loc?.line, loc?.column, idRoot, reg1.name, reg2.name, reg3.name);
   };
   var peg$f21 = function(reg1, reg2) {
     const loc = location()?.start;
     let idRoot = cst.newNode();
     newPath(idRoot, 'Logic', ['mvn', reg1, 'COMA', reg2]);
-    return new Operation(loc?.line, loc?.column, idRoot, 'Logic', 'mvn', reg1.name, reg2.name, null, null);
+    return new Mvn(loc?.line, loc?.column, idRoot, reg1.name, reg2.name);
   };
   var peg$f22 = function(reg1, reg2) {
     const loc = location()?.start;

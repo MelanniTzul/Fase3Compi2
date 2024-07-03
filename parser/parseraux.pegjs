@@ -158,28 +158,28 @@ Logic
     const loc = location()?.start;
     let idRoot = cst.newNode();
     newPath(idRoot, 'Logic', ['and', reg1, 'COMA', reg2, 'COMA', reg3]);
-    return new Operation(loc?.line, loc?.column, idRoot, 'Logic', 'and', reg1.name, reg2.name, reg3.name, null);
+    return new And(loc?.line, loc?.column, idRoot, reg1.name, reg2.name, reg3.name);
   }
   / "orr" _ reg1:register COMA _ reg2:register COMA _ reg3:register
   {
     const loc = location()?.start;
     let idRoot = cst.newNode();
     newPath(idRoot, 'Logic', ['orr', reg1, 'COMA', reg2, 'COMA', reg3]);
-    return new Operation(loc?.line, loc?.column, idRoot, 'Logic', 'orr', reg1.name, reg2.name, reg3.name, null);
+    return new Orr(loc?.line, loc?.column, idRoot, reg1.name, reg2.name, reg3.name);
   }
   / "eor" _ reg1:register COMA _ reg2:register COMA _ reg3:register
   {
     const loc = location()?.start;
     let idRoot = cst.newNode();
     newPath(idRoot, 'Logic', ['eor', reg1, 'COMA', reg2, 'COMA', reg3]);
-    return new Operation(loc?.line, loc?.column, idRoot, 'Logic', 'eor', reg1.name, reg2.name, reg3.name, null);
+    return new Eor(loc?.line, loc?.column, idRoot, reg1.name, reg2.name, reg3.name);
   }
   / "mvn" _ reg1:register COMA _ reg2:register
   {
     const loc = location()?.start;
     let idRoot = cst.newNode();
     newPath(idRoot, 'Logic', ['mvn', reg1, 'COMA', reg2]);
-    return new Operation(loc?.line, loc?.column, idRoot, 'Logic', 'mvn', reg1.name, reg2.name, null, null);
+    return new Mvn(loc?.line, loc?.column, idRoot, reg1.name, reg2.name);
   }
 
 Move
