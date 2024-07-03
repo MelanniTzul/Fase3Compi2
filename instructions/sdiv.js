@@ -11,29 +11,32 @@ class Sdiv extends Instruction {
     }
 
     execute(ast, env, gen) {
-        let new1,new2;
+        let resultado, divisor, dividendo;
         // Validar tipo de valor 1
-        if(this.arg1 instanceof Expression) new1 = this.arg1?.execute(ast, env, gen);
-        else new1 = ast.registers?.getRegister(this.arg1);
+        if(this.arg1 instanceof Expression) divisor = this.arg1?.execute(ast, env, gen);
+        else divisor = ast.registers?.getRegister(this.arg1);
         
         // Validar tipo de valor 2
-        if(this.arg2 instanceof Expression) new2 = this.arg2?.execute(ast, env, gen);
-        else new2 = ast.registers?.getRegister(this.arg2);
+        if(this.arg2 instanceof Expression) dividendo = this.arg2?.execute(ast, env, gen);
+        else dividendo = ast.registers?.getRegister(this.arg2);
         
+        console.log(new1)
         // Validaciones 1
-        if (new1 === null) ast.setNewError({ msg: `El valor de asignación es incorrecto.`, line: this.line, col: this.col});
+        if (divisor === null) ast.setNewError({ msg: `El valor de asignación es incorrecto.`, line: this.line, col: this.col});
         
         // Validaciones 2
-        if (new2 === null) ast.setNewError({ msg: `El valor de asignación es incorrecto.`, line: this.line, col: this.col});
+        if (dividendo === null) ast.setNewError({ msg: `El valor de asignación es incorrecto.`, line: this.line, col: this.col});
         
-        let newV;
         try {
-            newV = new1/new2; 
+            resultado = divisor.value/dividendo.value; 
         } catch (error) {
             ast.setNewError({ msg: `El valor de asignación es incorrecto.`, line: this.line, col: this.col});
         }
+        // Set register con un nuevo simbolo para asignarla a obj si es un nuevo registro o si cambia
+        let symbolVariable = new Symbol(this.line, this.col, 'integer', 'space', resultado);
         // Set register
-        let setReg = ast.registers?.setRegister(this.arg3, newV);
+        let setReg = ast.registers?.setRegister(this.arg3, symbolVariable);
+        console.log(setReg)
         if (setReg === null) ast.setNewError({ msg: `El registro de destino es incorrecto.`, line: this.line, col: this.col});
     }
 }
