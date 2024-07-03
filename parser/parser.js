@@ -341,7 +341,7 @@ function peg$parse(input, options) {
     const loc = location()?.start;
     const idRoot = cst.newNode();
     newPath(idRoot, 'Arithmetic', ['sdiv', reg1, 'COMA', reg2, 'COMA', reg3]);
-    return new Operation(loc?.line, loc?.column, idRoot, 'Arithmetic', 'sdiv', reg1.name, reg2.name, reg3.name, null);
+    return new Sdiv(loc?.line, loc?.column, idRoot, reg1.name, reg2.name, reg3.name);
   };
   var peg$f16 = function(reg1, reg2, reg3) {
     const loc = location()?.start;
