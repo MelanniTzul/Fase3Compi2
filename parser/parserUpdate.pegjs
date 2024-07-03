@@ -1,60 +1,4 @@
-{
-    class Cst {
-    constructor() {
-        this.Nodes = [];
-        this.Edges = [];
-        this.idCount = 0;
-    }
 
-    newNode(){
-        let count = this.idCount; 
-        this.idCount++;
-        return `${count}`
-    }
-
-    addNode(id, label){
-        this.Nodes.push({
-            id: id, 
-            label: label,
-        });
-    }
-
-    addEdge(from, to){
-        this.Edges.push({
-            from: from, 
-            to: to,
-        });
-    }
-}
-  // Creando cst 
-  let cst = new Cst();
-  // Agregar nodos
-  function newPath(idRoot, nameRoot, nodes) {
-    cst.addNode(idRoot, nameRoot);
-    for (let node of nodes) {
-      if (typeof node !== "string"){
-        cst.addEdge(idRoot, node?.id);
-        continue;
-      }
-      let newNode = cst.newNode();
-      cst.addNode(newNode, node);
-      cst.addEdge(idRoot, newNode);
-    }
-  }
-}
-// Iniciamos el análisis sintáctico con la regla inicial "start"
-/*
-Start
-  = gs:GlobalSection _? ds1:DataSection? _? ts:TextSection _? ds2:DataSection? {
-    let dataSectionConcat = []
-    if (ds1 != null) dataSectionConcat = dataSectionConcat.concat(ds1);
-    if (ds2 != null) dataSectionConcat = dataSectionConcat.concat(ds2);
-    // Agregando raiz cst
-    let idRoot = cst.newNode();
-    newPath(idRoot, 'Start', [gs, ds1, ts, ds2]);
-    return new Root(gs, dataSectionConcat, ts, cst);
-}
-*/
 start
     = line:(directive / section / instruction / comment / mcomment / blank_line)*
 
@@ -117,30 +61,11 @@ instruction
 // Instrucciones Suma 64 bits y 32 bits (ADD)
 add_inst "Instrucción de Suma"
     = _* "ADD"i _* rd:reg64 _* "," _* src1:reg64 _* "," _* src2:operand64 _* comment? "\n"?
-    {
-        const loc = location()?.start;
-        const idRoot = cst.newNode();
-        newPath(idRoot, 'Arithmetic', ['add', rd, 'COMA', src1, 'COMA', src2]);
-        return new Operation(loc?.line, loc?.column, idRoot, 'Arithmetic', 'add', rd.name, src1.name, src2.name, null);
-    }
-
     / _* "ADD"i _* rd:reg32 _* "," _* src1:reg32 _* "," _* src2:operand32 _* comment? "\n"?
-    {
-        const loc = location()?.start;
-        const idRoot = cst.newNode();
-        newPath(idRoot, 'Arithmetic', ['add', rd, 'COMA', src1, 'COMA', src2]);
-        return new Operation(loc?.line, loc?.column, idRoot, 'Arithmetic', 'add', rd.name, src1.name, src2.name, null);
-    }
 
 // Instruccions ands
 ands_inst 'Instrucción de ands'
   = _* 'ANDS'i _* rd:reg64_or_reg32 ', ' rd1:reg64_or_reg32 ', ' rd2:immediate _* comment? "\n"?
-    {
-        const loc = location()?.start;
-        const idRoot = cst.newNode();
-        newPath(idRoot, 'Arithmetic', ['ands', rd, 'COMA', rd1, 'COMA', rd2]);
-        return new Operation(loc?.line, loc?.column, idRoot, 'Arithmetic', 'ands', rd.name, rd1.name, srd2.name, null);
-    }
 
 // Instrucciones de Resta 64 bits y 32 bits (SUB)  
 sub_inst
@@ -151,77 +76,41 @@ sub_inst
 // Instrucciones de Multiplicación 64 bits y 32 bits (MUL)
 mul_inst
     = _* "MUL"i _* rd:reg64 _* "," _* src1:reg64 _* "," _* src2:operand64 _* comment? "\n"?
-    {
-        const loc = location()?.start;
-        const idRoot = cst.newNode();
-        newPath(idRoot, 'Arithmetic', ['mul', rd, 'COMA', src1, 'COMA', src2]);
-        return new Operation(loc?.line, loc?.column, idRoot, 'Arithmetic', 'mul', rd.name, src1.name, src2.name, null);
-    }
-
     / _* "MUL"i _* rd:reg32 _* "," _* src1:reg32 _* "," _* src2:operand32 _* comment? "\n"?
-    {
-        const loc = location()?.start;
-        const idRoot = cst.newNode();
-        newPath(idRoot, 'Arithmetic', ['mul', rd, 'COMA', src1, 'COMA', src2]);
-        return new Operation(loc?.line, loc?.column, idRoot, 'Arithmetic', 'mul', rd.name, src1.name, src2.name, null);
-    }
 
 // Instrucciones de División 64 bits y 32 bits (DIV)
 div_inst
     = _* "DIV"i _* rd:reg64 _* "," _* src1:reg64 _* "," _* src2:operand64 _* comment? "\n"?
-    {
-        const loc = location()?.start;
-        const idRoot = cst.newNode();
-        newPath(idRoot, 'Arithmetic', ['div', rd, 'COMA', src1, 'COMA', src2]);
-        return new Operation(loc?.line, loc?.column, idRoot, 'Arithmetic', 'div', rd.name, src1.name, src2.name, null);
-    }
     / _* "DIV"i _* rd:reg32 _* "," _* src1:reg32 _* "," _* src2:operand32 _* comment? "\n"?
-    {
-        const loc = location()?.start;
-        const idRoot = cst.newNode();
-        newPath(idRoot, 'Arithmetic', ['div', rd, 'COMA', src1, 'COMA', src2]);
-        return new Operation(loc?.line, loc?.column, idRoot, 'Arithmetic', 'div', rd.name, src1.name, src2.name, null);
-    }
 
 // Instrucciones de División sin signo 64 bits y 32 bits (UDIV)
 udiv_inst
     = _* "UDIV"i _* rd:reg64 _* "," _* src1:reg64 _* "," _* src2:operand64 _* comment? "\n"?
-
     / _* "UDIV"i _* rd:reg32 _* "," _* src1:reg32 _* "," _* src2:operand32 _* comment? "\n"?
 
 // Instrucciones de División con signo 64 bits y 32 bits (SDIV)
 sdiv_inst
     = _* "SDIV"i _* rd:reg64 _* "," _* src1:reg64 _* "," _* src2:operand64 _* comment? "\n"?
-
     / _* "SDIV"i _* rd:reg32 _* "," _* src1:reg32 _* "," _* src2:operand32 _* comment? "\n"?
 
 // Instrucciones AND 64 bits y 32 bits (AND)        
 and_inst
     = _* "AND"i _* rd:reg64 _* "," _* src1:reg64 _* "," _* src2:operand64 _* comment? "\n"?
-
     / _* "AND"i _* rd:reg32 _* "," _* src1:reg32 _* "," _* src2:operand32 _* comment? "\n"?
 
 // Instrucciones OR 64 bits y 32 bits (ORR)
 orr_inst
     = _* "ORR"i _* rd:reg64 _* "," _* src1:reg64 _* "," _* src2:operand64 _* comment? "\n"?
-
     / _* "ORR"i _* rd:reg32 _* "," _* src1:reg32 _* "," _* src2:operand32 _* comment? "\n"?
 
 // Instrucciones XOR 64 bits y 32 bits (EOR)
 eor_inst
     = _* "EOR"i _* rd:reg64 _* "," _* src1:reg64 _* "," _* src2:operand64 _* comment? "\n"?
-
     / _* "EOR"i _* rd:reg32 _* "," _* src1:reg32 _* "," _* src2:operand32 _* comment? "\n"?
 
 // Instrucción MOV 64 bits y 32 bits (MOV)
 mov_inst "Instrucción MOV"
   = _* "MOV"i _* rd:reg64_or_reg32 _* "," _* src:mov_source _* comment? "\n"?
-    {
-        const loc = location()?.start;
-        const idRoot = cst.newNode();
-        newPath(idRoot, 'Control', ['mov', rd, 'COMA', src]);
-        return new Operation(loc?.line, loc?.column, idRoot, 'Control', 'mov', rd.name, src.name, null,null);
-    }
 
 reg64_or_reg32 "Registro de 64 o 32 Bits"
   = i:reg64             {return i;}
@@ -234,7 +123,6 @@ mov_source "Source para MOV"
 //  Instucción Load Register (LDR)
 ldr_inst "Instrucción LDR"
     = _* "LDR"i _* rd:reg64 _* "," _* src:ldr_source _* comment? "\n"?
-
     / _* "LDR"i _* rd:reg32 _* "," _* src:ldr_source _* comment? "\n"?
 
 ldr_source 
@@ -385,11 +273,6 @@ uxtb_inst 'instruccion uxtb'
 // Registros de propósito general 64 bits (limitado a los registros válidos de ARM64)
 reg64 "Registro_64_Bits"
     = "x"i ("30" / [12][0-9] / [0-9])
-    {
-        let idRoot = cst.newNode(); 
-        newPath(idRoot, 'register', [text()]);
-        return { id: idRoot, name: text() }
-    }
     / "SP"i // Stack Pointer
         
     / "LR"i  // Link Register
@@ -399,11 +282,6 @@ reg64 "Registro_64_Bits"
 // Registros de propósito general 32 bits (limitado a los registros válidos de ARM64)
 reg32 "Registro_32_Bits"
     = "w"i ("30" / [12][0-9] / [0-9])
-    {
-        let idRoot = cst.newNode(); 
-        newPath(idRoot, 'register', [text()]);
-        return { id: idRoot, name: text() }
-    }
 // Operando puede ser un registro o un número inmediato
 operand64 "Operandor 64 Bits"
     = r:reg64 _* "," _* ep:extend_op                 // Registro con extensión de tamaño
