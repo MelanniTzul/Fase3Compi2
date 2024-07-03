@@ -3,9 +3,9 @@ class Environment {
     constructor(previous, id) {
         this.previous = previous;
         this.id = id;
-        this.tabla = {};
+        this.table = {};
     }
-    // almacena el archivo en el stack
+
     saveVariable(ast, line, col, id, symbol) {
         if (id in this.table) {
             ast.setNewError({ msg: `La variable ${id} ya existe.`, line, col});
@@ -14,7 +14,6 @@ class Environment {
         this.table[id] = symbol;
     }
 
-    // obtine la variable del archivo
     getVariable(ast, line, col, id) {
         let tmpEnv = this;
         while (true) {
@@ -31,8 +30,7 @@ class Environment {
         return new Symbol(0, 0, '', Type.NULL, null);
     }
 
-    //modifica la variable
-    setVariable(ast, line, col, id, sym) {
+    setVariable(ast, line, col, id, sym) { 
         let tmpEnv = this;
         while (true) {
             if (id in tmpEnv.table) {

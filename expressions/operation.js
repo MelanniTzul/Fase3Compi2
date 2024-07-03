@@ -14,10 +14,7 @@ class Operation extends Expression {
     }
 
     execute(ast, env, gen) {
-        // Cuádruplos forma temporal 1
-        /* let temp = gen.newTemp();
-        gen.addQuadruple(this.inst, this.op1, this.op2, this.op3, temp); */
-        // Cúadruplos forma arm 2
+        // Cúadruplos
         gen.addQuadruple(this.inst, this.op2, this.op3, null, this.op1);
     }
 }
