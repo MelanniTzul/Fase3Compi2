@@ -323,19 +323,19 @@ function peg$parse(input, options) {
     const loc = location()?.start;
     const idRoot = cst.newNode();
     newPath(idRoot, 'Arithmetic', ['sub', reg1, 'COMA', reg2, 'COMA', reg3]);
-    return new Operation(loc?.line, loc?.column, idRoot, 'Arithmetic', 'sub', reg1.name, reg2.name, reg3.name, null);
+    return new Sub(loc?.line, loc?.column, idRoot, reg1.name, reg2.name, reg3.name);
   };
   var peg$f13 = function(reg1, reg2, reg3) {
     const loc = location()?.start;
     const idRoot = cst.newNode();
     newPath(idRoot, 'Arithmetic', ['mul', reg1, 'COMA', reg2, 'COMA', reg3]);
-    return new Operation(loc?.line, loc?.column, idRoot, 'Arithmetic', 'mul', reg1.name, reg2.name, reg3.name, null);
+    return new Mul(loc?.line, loc?.column, idRoot, reg1.name, reg2.name, reg3.name);
   };
   var peg$f14 = function(reg1, reg2, reg3) {
     const loc = location()?.start;
     const idRoot = cst.newNode();
     newPath(idRoot, 'Arithmetic', ['udiv', reg1, 'COMA', reg2, 'COMA', reg3]);
-    return new Operation(loc?.line, loc?.column, idRoot, 'Arithmetic', 'udiv', reg1.name, reg2.name, reg3.name, null);
+    return new Udiv(loc?.line, loc?.column, idRoot, reg1.name, reg2.name, reg3.name);
   };
   var peg$f15 = function(reg1, reg2, reg3) {
     const loc = location()?.start;

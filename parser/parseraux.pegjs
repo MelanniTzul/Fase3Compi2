@@ -17,14 +17,18 @@
 }
 
 Start
-  = gs:GlobalSection _? ds1:DataSection? _? ts:TextSection _? ds2:DataSection? {
+  = gs:GlobalSection _? ds1:DataSection? _? bss1:BssSection? _? ts:TextSection _? ds2:DataSection? _? bss2:BssSection?
+  {
     let dataSectionConcat = []
     if (ds1 != null) dataSectionConcat = dataSectionConcat.concat(ds1.value);
     if (ds2 != null) dataSectionConcat = dataSectionConcat.concat(ds2.value);
+
+    if (bss1 != null) dataSectionConcat = dataSectionConcat.concat(bss1.value);
+    if (bss2 != null) dataSectionConcat = dataSectionConcat.concat(bss2.value);
     // Agregando raiz cst
     let idRoot = cst.newNode();
-    newPath(idRoot, 'Start', [gs, ds1, ts, ds2]);
-    return new Root(gs, dataSectionConcat, ts, cst);
+    newPath(idRoot, 'Start', [gs, ds1, bss1, ts, ds2, bss2 ]);
+    return new Root(gs, dataSectionConcat, ts, c st);
   }
 
 GlobalSection
@@ -46,6 +50,20 @@ DataSection
   {
     let idRoot = cst.newNode();
     newPath(idRoot, 'DataSection', ['.data'].concat(dec));
+    return { id: idRoot, value: dec};
+  }
+
+  BssSection
+  = ".bss" _ dec:Declarations*
+  {
+    let idRoot = cst.newNode();
+    newPath(idRoot, 'BssSection', ['.data'].concat(dec));
+    return { id: idRoot, value: dec};
+  }
+  / ".data" _ dec:Declarations*
+  {
+    let idRoot = cst.newNode();
+    newPath(idRoot, 'BssSection', ['.data'].concat(dec));
     return { id: idRoot, value: dec};
   }
 
@@ -103,28 +121,28 @@ Arithmetic
     const loc = location()?.start;
     const idRoot = cst.newNode();
     newPath(idRoot, 'Arithmetic', ['add', reg1, 'COMA', reg2, 'COMA', reg3]);
-    return new Operation(loc?.line, loc?.column, idRoot, 'Arithmetic', 'add', reg1.name, reg2.name, reg3.name, null);
+    return new Operation(loc?.line, loc?.column, idRoot, reg1.name, reg2.name, reg3.name);
   }
   / "sub" _ reg1:register COMA _ reg2:register COMA _ reg3:register
   {
     const loc = location()?.start;
     const idRoot = cst.newNode();
     newPath(idRoot, 'Arithmetic', ['sub', reg1, 'COMA', reg2, 'COMA', reg3]);
-    return new Operation(loc?.line, loc?.column, idRoot, 'Arithmetic', 'sub', reg1.name, reg2.name, reg3.name, null);
+    return new Sub(loc?.line, loc?.column, idRoot, reg1.name, reg2.name, reg3.name);
   }
   / "mul" _ reg1:register COMA _ reg2:register COMA _ reg3:register
   {
     const loc = location()?.start;
     const idRoot = cst.newNode();
     newPath(idRoot, 'Arithmetic', ['mul', reg1, 'COMA', reg2, 'COMA', reg3]);
-    return new Operation(loc?.line, loc?.column, idRoot, 'Arithmetic', 'mul', reg1.name, reg2.name, reg3.name, null);
+    return new Mul(loc?.line, loc?.column, idRoot, reg1.name, reg2.name, reg3.name);
   }
   / "udiv" _ reg1:register COMA _ reg2:register COMA _ reg3:register
   {
     const loc = location()?.start;
     const idRoot = cst.newNode();
     newPath(idRoot, 'Arithmetic', ['udiv', reg1, 'COMA', reg2, 'COMA', reg3]);
-    return new Operation(loc?.line, loc?.column, idRoot, 'Arithmetic', 'udiv', reg1.name, reg2.name, reg3.name, null);
+    return new Udiv(loc?.line, loc?.column, idRoot, reg1.name, reg2.name, reg3.name);
   }
   / "sdiv" _ reg1:register COMA _ reg2:register COMA _ reg3:register
   {

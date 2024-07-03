@@ -1,4 +1,4 @@
-class Sdiv extends Instruction {
+class Mul extends Instruction {
 
     constructor(line, col, id, obj, value1, value2) {
         super();
@@ -22,7 +22,7 @@ class Sdiv extends Instruction {
         if(this.value2 instanceof Expression) divisor = this.value2?.execute(ast, env, gen);
         else divisor = ast.registers?.getRegister(this.value2);
         // resultado de la division
-        resultado = dividendo.value/divisor.value;
+        resultado = dividendo.value*divisor.value;
         if (resultado === null) ast.setNewError({ msg: `El valor de asignación es incorrecto.`, line: this.line, col: this.col});
         // Set register con un nuevo simbolo para asignarla a obj si es un nuevo registro o si cambia
         let symbolVariable = new Symbol(this.line, this.col, 'integer', 'space', resultado);
