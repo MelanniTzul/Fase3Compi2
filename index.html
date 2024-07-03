@@ -34,7 +34,7 @@
             href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/moxer.min.css"
             integrity="sha512-zrCGHGmTpiZpzVJ6BdiDfsUT6t8+oOKmOtfU82GhBo/7sk/cns7phhKXSWmGH6uACPqgjP8QmgczNBY7HMB9TQ=="
             crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <title>Proyecto Fase 2</title>
+        <title>Proyecto Fase 3</title>
         <!-- STYLE -->
         <link rel="stylesheet" href="styles/style.css" type="text/css">
 
@@ -75,29 +75,32 @@
                     <div class="nav-wrapper">
                         <ul id="nav-mobile" class="nav__options">
                             <li>
-                                <button class="btn-floating waves-effect waves-circle waves-light red  tooltipped" data-position="bottom" data-tooltip="Open File" id="btn__open">
-                                    <i class="tiny material-icons"> cloud_upload </i>
-                                </button>
+                                <label for="fileInput" class="circle-label tooltipped" data-position="bottom" data-tooltip="Abrir archivo">
+                                    <div class="circle">
+                                        <i class="tiny material-icons">file_open</i>
+                                        <input style="display: none;" type="file" id="fileInput" accept=".s" onchange="CargarArchivo()">
+                                    </div>
+                                </label>
                             </li>
                             <li>
-                                <button class="btn-floating waves-effect waves-circle waves-light red  tooltipped" data-position="bottom" data-tooltip="Save File" id="btn__save">
+                                <button style="margin-top: 8px;"  class="btn-floating waves-effect waves-circle waves-light   tooltipped" data-position="bottom" data-tooltip="Guardar archivo" id="btn__save">
                                     <i class="material-icons"> cloud_download </i>
                                 </button>
                             </li>
                         </ul>
                         <div>
-                            <h3 class="title-editor">Fase 2 - OLC2</h3>
+                            <h3 class="title-editor">Fase 3</h3>
                         </div>
 
                         <ul id="nav-mobile" class="nav__options">
                             <li>
-                                <button class="btn-floating waves-effect waves-circle waves-light red  tooltipped" data-position="bottom" data-tooltip="Analysis" id="btn__analysis">
+                                <button class="btn-floating waves-effect waves-circle waves-light red  tooltipped" data-position="bottom" data-tooltip="Compilar" id="btn__analysis">
                                     <i class="material-icons"> play_arrow</i>
                                 </button>
                             </li>
 
                             <li>
-                                <button class="btn-floating waves-effect waves-circle waves-light red  tooltipped" data-position="bottom" data-tooltip="Clear Editor" id="btn__clean">
+                                <button class="btn-floating waves-effect waves-circle waves-light red  tooltipped" data-position="bottom" data-tooltip="Limpiar Editor" id="btn__clean">
                                     <i class="material-icons"> cleaning_services </i>
                                 </button>
                             </li>
@@ -110,10 +113,10 @@
             </div>
             <div class="col s12 m12 l6">
                 <ul class="tabs tabs-fixed-width  z-depth-5">
-                    <li class="tab"><a href="#console-tab"> Console </a></li>
+                    <li class="tab"><a href="#console-tab"> Consola </a></li>
                     <li class="tab"><a href="#cst"> CST </a></li>
-                    <li class="tab"><a href="#quad__table"> Quadruples </a></li>
-                    <li class="tab"><a href="#data__table"> Data </a></li>
+                    <li class="tab"><a href="#quad__table"> Cuadruplos </a></li>
+                    <li class="tab"><a href="#data__table"> Datos </a></li>
                 </ul>
 
                 <div id="console-tab" class="col s12 tab__panel">
@@ -154,15 +157,15 @@
                     <table id="dataTable" style="width: 100%">
                           <thead>
                             <tr>
-                                <th>Register</th>
-                                <th>Data</th>
+                                <th>Registro</th>
+                                <th>Datos</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
                         <tfoot>
                             <tr>
-                                <th>Register</th>
-                                <th>Data</th>
+                                <th>Registro</th>
+                                <th>Datos</th>
                             </tr>
                         </tfoot>
                     </table>
