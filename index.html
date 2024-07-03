@@ -117,6 +117,8 @@
                     <li class="tab"><a href="#cst"> CST </a></li>
                     <li class="tab"><a href="#quad__table"> Cuadruplos </a></li>
                     <li class="tab"><a href="#data__table"> Datos </a></li>
+                    <li class="tab"><a href="#error_table">Reporte de errores</a></li>
+
                 </ul>
 
                 <div id="console-tab" class="col s12 tab__panel">
@@ -166,6 +168,30 @@
                             <tr>
                                 <th>Registro</th>
                                 <th>Datos</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                 <!-- tabla de errores -->
+                 <div id="error_table" class="col s12 tab__panel">
+                    <table id="errorTable" style="width: 100%">
+                          <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Descripción</th>
+                                <th>Línea</th>
+                                <th>Columna</th>
+                                <th>Tipo</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <th>No</th>
+                                <th>Descripción</th>
+                                <th>Línea</th>
+                                <th>Columna</th>
+                                <th>Tipo</th>
                             </tr>
                         </tfoot>
                     </table>

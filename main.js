@@ -1,5 +1,5 @@
 
-let quadTable, dataTable, symbolTable, Arm64Editor, consoleResult, modalInstance;
+let quadTable, dataTable, symbolTable, Arm64Editor, consoleResult, modalInstance, errorTable;
 
 $(document).ready(function () {
 
@@ -10,6 +10,13 @@ $(document).ready(function () {
     dataTable = newDataTable('#dataTable',
         [{data: "Register"}, {data: "Data"}],
         []);
+
+    // Inicializar la tabla de errores
+    errorTable = newDataTable('#errorTable',
+    [{data: "No"}, {data: "Descripción"}, {data: "Línea"}, {data: "Columna"}, {data: "Tipo"}],
+     []);
+
+
 
     $('.tabs').tabs();
     $("select").formSelect();
@@ -75,7 +82,7 @@ const openFile = async (editor) => {
         editor.setValue(file);
     }
     reader.onerror = (e) => {
-        console.log("Error to read file", e.target.error)
+        // console.log("Error to read file", e.target.error)
     }
     reader.readAsText(file)
 }
@@ -179,12 +186,16 @@ const analysis = async () => {
         if (e instanceof PEGGY.SyntaxError) {
             if (isLexicalError(e)) {
                 consoleResult.setValue('Error Léxico: ' + e.message);
+                // console.log("quiero ver que me devuelve", consoleResult.setValue('Error Léxico: ' + e.message));
             } else {
                 consoleResult.setValue('Error Sintáctico: ' + e.message);
+                // console.log("quiero ver que me devuelve", consoleResult.setValue('Error Sintáctico: ' + e.message));
+
             }
         } else {
             console.error('Error desconocido:', e);
         }
+        fillErrorTable([e]);
     }
     // ****************** Tiempo final
     const end = performance.now();
@@ -216,6 +227,7 @@ const addDataTable = (data) => {
 
 const clearDataTable = () => {
     dataTable.clear().draw();
+    errorTable.clear().draw();
 }
 
 const clearQuadTable = () => {
@@ -337,4 +349,21 @@ function CargarArchivo() {
         reader.readAsText(file);
     }
 
+}
+
+function fillErrorTable(errors) {
+    // Limpiar la tabla antes de agregar nuevos datos
+    errorTable.clear().draw();
+
+    // Recorrer cada error y agregarlo a la tabla
+    errors.forEach((error, index) => {
+        let tipoError = isLexicalError(error) ? 'Léxico' : 'Sintáctico';
+        errorTable.row.add({
+            No: index + 1,
+            Descripción: error.message,
+            Línea: error.location.start.line,
+            Columna: error.location.start.column,
+            Tipo: tipoError
+        }).draw();
+    });
 }
