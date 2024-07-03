@@ -1,11 +1,19 @@
 
 let quadTable, symbolTable, Arm64Editor, consoleResult, generalTime;
+let errorTable;
 
 $(document).ready(function () {
 
     quadTable = newDataTable('#quadTable',
         [{data: "Op"}, {data: "Arg1"}, {data: "Arg2"}, {data: "Arg3"}, {data: "Result"}],
         []);
+    
+        // Inicializar la tabla de errores
+    errorTable = newDataTable('#errorTable',
+        [{data: "No"}, {data: "Descripción"}, {data: "Línea"}, {data: "Columna"}, {data: "Tipo"}],
+        []);
+        // Llenar la tabla de errores con datos estáticos
+    fillErrorTable();
 
     $('.tabs').tabs();
     $("select").formSelect();
@@ -170,16 +178,67 @@ const generateCst = (CstObj) => {
     let network = new vis.Network(container, data, options);
 }
 
-const newDataTable = (id, columns, data) => {
+function newDataTable(id, columns, data) {
     let result = $(id).DataTable({
         responsive: true,
-        lengthMenu: [[15, 25, 50, -1], [15, 25, 50, "All"]],
-        "lengthChange": true,
+        lengthMenu: [[15, 25, 50, -1], [15, 25, 50, "Todos"]],
+        lengthChange: true,
         data,
-        columns
+        columns,
+        searching: true,  // Habilitar búsqueda
+        language: {
+            "sProcessing":     "Procesando...",
+            "sLengthMenu":     "Mostrar _MENU_ registros",
+            "sZeroRecords":    "No se encontraron resultados",
+            "sEmptyTable":     "Ningún dato disponible en esta tabla",
+            "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix":    "",
+            "sSearch":         "Buscar:",
+            "sUrl":            "",
+            "sInfoThousands":  ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst":    "Primero",
+                "sLast":     "Último",
+                "sNext":     "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            }
+        }
     });
     $('select').formSelect();
     return result;
+}
+
+// Función para agregar datos a la tabla de errores
+// const addDataToErrorTable = (data) => {
+//     for (let error of data) {
+//         errorTable.row.add(error).draw();
+//     }
+// }
+
+function fillErrorTable() {
+    const staticErrors = [
+        { No: 1, Descripción: 'Caracter no reconocido', Línea: 1, Columna: 5, Tipo: 'Léxico' },
+        { No: 2, Descripción: 'Paréntesis no balanceados', Línea: 2, Columna: 10, Tipo: 'Sintáctico' },
+        { No: 3, Descripción: 'Variable no definida', Línea: 3, Columna: 15, Tipo: 'Semántico' },
+        { No: 4, Descripción: 'Número no válido', Línea: 4, Columna: 20, Tipo: 'Léxico' },
+        { No: 5, Descripción: 'Falta punto y coma', Línea: 5, Columna: 25, Tipo: 'Sintáctico' },
+        { No: 6, Descripción: 'Falta punto y coma', Línea: 6, Columna: 26, Tipo: 'Sintáctico' }
+    ];
+
+    for (let error of staticErrors) {
+        errorTable.row.add(error).draw();
+    }
+}
+
+const clearErrorTable = () => {
+    errorTable.clear().draw();
 }
 
     btnOpen = document.getElementById('btn__open'),
@@ -215,4 +274,5 @@ function CargarArchivo() {
 
         reader.readAsText(file);
     }
+
 }

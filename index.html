@@ -96,22 +96,24 @@
                 </div>
             </div>
             <div class="col s12 m12 l6">
+                <!-- Agregar campos -->
                 <ul class="tabs tabs-fixed-width  z-depth-5">
                     <li class="tab"><a href="#console-tab"> Consola</a></li>
                     <li class="tab"><a href="#cst"> CST </a></li>
                     <li class="tab"><a href="#quad__table">Cuadruplos</a></li>
+                    <li class="tab"><a href="#error_table">Reporte de errores</a></li>
                 </ul>
-
+                <!-- Consola -->
                 <div id="console-tab" class="col s12 tab__panel">
                     <textarea id="console__result"></textarea>
                 </div>
-               
+               <!-- arbol cst -->
                 <div id="cst" class="col s12 tab__panel">
                     <div class="tab__panel__btn">
                         <div id="mynetwork"></div>
                     </div>
                 </div>
-
+                <!-- Tabla con columnas -->
                 <div id="quad__table" class="col s12 tab__panel">
                     <table id="quadTable" style="width: 100%">
                           <thead>
@@ -131,6 +133,30 @@
                                 <th>Arg2</th>
                                 <th>Arg3</th>
                                 <th>Result</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <!-- tabla de errores -->
+                <div id="error_table" class="col s12 tab__panel">
+                    <table id="errorTable" style="width: 100%">
+                          <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Descripción</th>
+                                <th>Línea</th>
+                                <th>Columna</th>
+                                <th>Tipo</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <th>No</th>
+                                <th>Descripción</th>
+                                <th>Línea</th>
+                                <th>Columna</th>
+                                <th>Tipo</th>
                             </tr>
                         </tfoot>
                     </table>
