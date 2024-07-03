@@ -246,7 +246,7 @@ primitive
   / int:integer { return int }
 
 integer "integer"
-  = _ [0-9]+ _
+  = '-'? _ [0-9]+ _
   {
     const loc = location()?.start;
     let idRoot = cst.newNode();
