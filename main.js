@@ -110,7 +110,23 @@ const download = (name, content) => {
 const cleanEditor = (editor,consola) => {
     editor.setValue("");
     consola.setValue("");
+    clearQuadTable();
+    clearDataTable();
+    clearCST();
 }
+
+const clearCST = () => {
+    if (network) {
+        network.destroy();
+        network = undefined;
+    }
+    const container = document.getElementById('mynetwork');
+    if (container) {
+        container.innerHTML = ''; // Limpia el contenido del contenedor
+    }
+};
+
+
 
 function isLexicalError(e) {
     const validIdentifier = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/;
@@ -204,7 +220,7 @@ function mostrarToast(mensaje, duracion, type) {
     M.toast({html: mensaje, displayLength: duracion, classes: type});
 }
 
-
+let network;
 const generateCst = (CstObj) => {
     // Creando el arreglo de nodos
     let nodes = new vis.DataSet(CstObj.Nodes);
@@ -234,7 +250,7 @@ const generateCst = (CstObj) => {
     };
 
     // Generando grafico red
-    let network = new vis.Network(container, data, options);
+    network = new vis.Network(container, data, options);
 }
 
 const newDataTable = (id, columns, data) => {
