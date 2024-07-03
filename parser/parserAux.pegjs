@@ -103,28 +103,28 @@ Arithmetic
     const loc = location()?.start;
     const idRoot = cst.newNode();
     newPath(idRoot, 'Arithmetic', ['add', reg1, 'COMA', reg2, 'COMA', reg3]);
-    return new Operation(loc?.line, loc?.column, idRoot, 'Arithmetic', 'add', reg1.name, reg2.name, reg3.name, null);
+     return new Add(loc?.line, loc?.column, idRoot, reg1.name, reg2.name, reg3.name);
   }
   / "sub" _ reg1:register COMA _ reg2:register COMA _ reg3:register
   {
     const loc = location()?.start;
     const idRoot = cst.newNode();
     newPath(idRoot, 'Arithmetic', ['sub', reg1, 'COMA', reg2, 'COMA', reg3]);
-    return new Operation(loc?.line, loc?.column, idRoot, 'Arithmetic', 'sub', reg1.name, reg2.name, reg3.name, null);
+    return new Sub(loc?.line, loc?.column, idRoot, reg1.name, reg2.name, reg3.name);
   }
   / "mul" _ reg1:register COMA _ reg2:register COMA _ reg3:register
   {
     const loc = location()?.start;
     const idRoot = cst.newNode();
     newPath(idRoot, 'Arithmetic', ['mul', reg1, 'COMA', reg2, 'COMA', reg3]);
-    return new Operation(loc?.line, loc?.column, idRoot, 'Arithmetic', 'mul', reg1.name, reg2.name, reg3.name, null);
+     return new Mul(loc?.line, loc?.column, idRoot, reg1.name, reg2.name, reg3.name);
   }
   / "udiv" _ reg1:register COMA _ reg2:register COMA _ reg3:register
   {
     const loc = location()?.start;
     const idRoot = cst.newNode();
     newPath(idRoot, 'Arithmetic', ['udiv', reg1, 'COMA', reg2, 'COMA', reg3]);
-    return new Operation(loc?.line, loc?.column, idRoot, 'Arithmetic', 'udiv', reg1.name, reg2.name, reg3.name, null);
+    return new Udiv(loc?.line, loc?.column, idRoot, reg1.name, reg2.name, reg3.name);
   }
   / "sdiv" _ reg1:register COMA _ reg2:register COMA _ reg3:register
   {
